@@ -8,11 +8,15 @@ import { signInUserState } from 'store/auth'
 import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { User } from 'interface/User'
+import { snackbar } from 'store/snackbar'
+import { Snackbar } from 'interface/Snackbar'
+import constant from 'const'
 
 const Login: FC = memo(() => {
   const navigate = useNavigate()
   const setAuth = useSetRecoilState(signInUserState)
   const [authState] = useRecoilState(signInUserState)
+  const setSnackbar = useSetRecoilState(snackbar)
 
   const loginInWithGoogle = async () => {
     await signInWithPopup(auth, provider)
@@ -21,6 +25,13 @@ const Login: FC = memo(() => {
           ...state,
           displayName: result.user.displayName as string,
           isLogin: true,
+        }))
+
+        setSnackbar((state: Snackbar) => ({
+          ...state,
+          open: true,
+          message: 'ログインしました',
+          type: constant.success,
         }))
         navigate('/home')
       })

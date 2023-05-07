@@ -1,4 +1,5 @@
-import { Button, Typography } from '@mui/material'
+import { Button, Grid, Typography } from '@mui/material'
+import AppSnackbar from 'components/AppSnackbar'
 import { signOut } from 'firebase/auth'
 import React, { Suspense } from 'react'
 import { Outlet, Link } from 'react-router-dom'
@@ -35,6 +36,7 @@ const MainLayout = () => {
 
       <Suspense fallback={<h1>Loading...</h1>}>
         <Outlet />
+        <AppSnackbar />
       </Suspense>
     </div>
   )
