@@ -1,7 +1,7 @@
 import { Stack, Button } from '@mui/material'
 import React from 'react'
 
-export function SampleComponent() {
+function SampleComponent() {
   return (
     <Stack direction="row" spacing={2} sx={{ m: 2, p: 2 }}>
       <h1>secondary</h1>
@@ -24,3 +24,5 @@ export function SampleComponent() {
     </Stack>
   )
 }
+
+export default SampleComponent

@@ -1,18 +1,19 @@
-import theme from 'theme'
+import theme from './theme'
 import React from 'react'
-import { SampleComponent } from 'components/SamppleComponent'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { Typography } from '@mui/material'
-import { Login } from 'pages/Login'
+import { BrowserRouter } from 'react-router-dom'
+import { AppRouter } from './router/AppRouter'
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Typography />
-      <SampleComponent />
-      <Login />
+      <BrowserRouter>
+        <AppRouter />
+        <CssBaseline />
+        <Typography />
+      </BrowserRouter>
     </ThemeProvider>
   )
 }
