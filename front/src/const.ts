@@ -5,4 +5,6 @@ export default Object.freeze({
   warning: '#ffa726',
   info: '#29b6f6',
   success: '#66bb6a',
+
+  HEADER_DRAWER_WIDTH: 240,
 })
