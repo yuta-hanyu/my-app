@@ -1,11 +1,19 @@
-import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+} from '@mui/material'
 import { blueGrey } from '@mui/material/colors'
 import { signOut } from 'firebase/auth'
 import React, { memo, useState } from 'react'
 import { useRecoilState, useResetRecoilState } from 'recoil'
 import { signInUserState } from 'store/auth'
 import { auth } from 'utils/firebase'
-
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 // NOTE 発火するボタンごと子にする必要がある
 // https://stackoverflow.com/questions/70464786/mui-anchorel-prop-provided-is-invalid
 
@@ -14,17 +22,21 @@ const UserMenu = memo(() => {
   const [{ displayName, avatarImageUrl }] = useRecoilState(signInUserState)
   const resetAuth = useResetRecoilState(signInUserState)
   const userMenus = [
+    // TODO ユーザー情報編集作成
+    {
+      name: 'ユーザー情報編集',
+      clickFunc: () => setAnchorElUser(() => null),
+      color: '',
+      icon: <ManageAccountsIcon />,
+    },
     {
       name: 'ログアウト',
       clickFunc: () => {
         signOut(auth).then(() => resetAuth())
         setAnchorElUser(() => null)
       },
-    },
-    // TODO ユーザー情報編集作成
-    {
-      name: 'ユーザー情報編集',
-      clickFunc: () => setAnchorElUser(() => null),
+      color: 'error.main',
+      icon: <ExitToAppIcon />,
     },
   ]
 
@@ -57,7 +69,12 @@ const UserMenu = memo(() => {
       >
         {userMenus.map((userMenu) => (
           <MenuItem key={userMenu.name} onClick={userMenu.clickFunc} dense>
-            <Typography textAlign="center">{userMenu.name}</Typography>
+            <Box component={'span'} mr={1}>
+              {userMenu.icon}
+            </Box>
+            <Typography textAlign="center" sx={{ color: userMenu.color }}>
+              {userMenu.name}
+            </Typography>
           </MenuItem>
         ))}
       </Menu>
