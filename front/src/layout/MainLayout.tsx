@@ -1,17 +1,11 @@
 import { Typography } from '@mui/material'
 import AppSnackbar from 'components/AppSnackbar'
-import { signOut } from 'firebase/auth'
 import React, { Suspense, useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
-import { useResetRecoilState } from 'recoil'
-import { signInUserState } from 'store/auth'
-import { auth } from 'utils/firebase'
 import constant from 'const'
-
 import { styled, useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
-import CssBaseline from '@mui/material/CssBaseline'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
@@ -26,30 +20,17 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import { blueGrey, lightBlue } from '@mui/material/colors'
 import SidebarMenus from 'hooks/SidebarMenus'
+import UserMenu from 'components/UserMenu'
+import AppLoading from 'components/AppLoading'
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
 }
 
 const MainLayout = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
   const sidebarMenus = SidebarMenus()
-  const resetAuth = useResetRecoilState(signInUserState)
   const theme = useTheme()
-  const [open, setOpen] = useState<boolean>(false)
-
-  const handleDrawerOpen = () => {
-    setOpen(true)
-  }
-
-  const handleDrawerClose = () => {
-    setOpen(false)
-  }
-
-  const logout = () => {
-    signOut(auth).then(() => {
-      resetAuth()
-    })
-  }
 
   const Main = styled('main', {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -102,6 +83,7 @@ const MainLayout = () => {
 
   const StyledLink = styled(Link)(({ theme }) => ({
     color: blueGrey[50],
+    textDecoration: 'none',
     '&:hover': {
       color: lightBlue[300],
       transition: 'all 1s',
@@ -110,24 +92,33 @@ const MainLayout = () => {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={isDrawerOpen}>
         <Toolbar>
-          <IconButton
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              mr: 2,
-              color: blueGrey[50],
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            xxxxxxxx Board
-          </Typography>
+          <Box style={{ flexGrow: 1 }}>
+            <IconButton
+              aria-label="open drawer"
+              onClick={() =>
+                setIsDrawerOpen((prevIsDrawerOpen) => !prevIsDrawerOpen)
+              }
+              edge="start"
+              sx={{
+                mr: 2,
+                color: blueGrey[50],
+                ...(isDrawerOpen && { display: 'none' }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
+          <Box style={{ flexGrow: 1 }}>
+            <Typography variant="h6" noWrap component="div" align="center">
+              xxxxxxxx Board
+            </Typography>
+          </Box>
+          <Box style={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 0 }}>
+            <UserMenu />
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -142,10 +133,14 @@ const MainLayout = () => {
         }}
         variant="persistent"
         anchor="left"
-        open={open}
+        open={isDrawerOpen}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton
+            onClick={() =>
+              setIsDrawerOpen((prevIsDrawerOpen) => !prevIsDrawerOpen)
+            }
+          >
             {theme.direction === 'ltr' ? (
               <ChevronLeftIcon
                 sx={{
@@ -164,11 +159,7 @@ const MainLayout = () => {
         <Divider />
         <List>
           {sidebarMenus.map((menu) => (
-            <StyledLink
-              key={menu.name}
-              to={menu.path}
-              style={{ textDecoration: 'none' }}
-            >
+            <StyledLink key={menu.name} to={menu.path}>
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>{menu.icon}</ListItemIcon>
@@ -179,9 +170,10 @@ const MainLayout = () => {
           ))}
         </List>
       </Drawer>
-      <Main open={open}>
+      <Main open={isDrawerOpen}>
         <DrawerHeader />
-        <Suspense fallback={<h1>Loading...</h1>}>
+        {/* <AppLoading /> */}
+        <Suspense fallback={<AppLoading />}>
           <Outlet />
           <AppSnackbar />
         </Suspense>
@@ -190,30 +182,4 @@ const MainLayout = () => {
   )
 }
 
-{
-  /* return (
-    <div>
-      <Typography variant="h2">サンプルアプリ</Typography>
-      <Button variant="contained" color="primary" onClick={logout}>
-        Googleでアウト
-      </Button>
-      <ul>
-        <li>
-          <Link to="/home">Home</Link>
-        </li>
-        <li>
-          <Link to="/home/setting">setting</Link>
-        </li>
-        <li>
-          <Link to="/home/userManagement">setting</Link>
-        </li>
-      </ul>
-
-      <Suspense fallback={<h1>Loading...</h1>}>
-        <Outlet />
-        <AppSnackbar />
-      </Suspense>
-    </div>
-  ) */
-}
 export default MainLayout

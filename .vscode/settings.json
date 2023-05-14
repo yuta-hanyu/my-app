@@ -1,5 +1,31 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode", // フォーマッターをPrettierにする
   "editor.formatOnSave": true, // ファイル保存時にフォーマットを実行
-  "eslint.codeActionsOnSave.mode": "all" // ファイル保存時にESLintを実行
+  "eslint.codeActionsOnSave.mode": "all", // ファイル保存時にESLintを実行
+  "todo-tree.general.tags": ["FIXME", "NOTE", "TODO", "CHECK"],
+  "todo-tree.highlights.defaultHighlight": {
+    "gutterIcon": true
+  },
+  "todo-tree.highlights.customHighlight": {
+    "TODO": {
+      "icon": "check-circle-fill",
+      "foreground": "orange",
+      "iconColour": "orange"
+    },
+    "FIXME": {
+      "icon": "flame",
+      "foreground": "yellow",
+      "iconColour": "yellow"
+    },
+    "NOTE": {
+      "icon": "paintbrush",
+      "foreground": "#00bfff",
+      "iconColour": "#00bfff"
+    },
+    "CHECK": {
+      "icon": "plus-circle",
+      "foreground": "green",
+      "iconColour": "green"
+    }
+  }
 }

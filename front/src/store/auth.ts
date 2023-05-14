@@ -6,5 +6,6 @@ export const signInUserState = atom<User>({
   default: {
     displayName: '',
     isLogin: false,
+    avatarImageUrl: '/images/avatar_man_normal.png',
   },
 })
