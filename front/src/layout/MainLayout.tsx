@@ -81,7 +81,7 @@ const MainLayout = () => {
     justifyContent: 'flex-end',
   }))
 
-  const StyledLink = styled(Link)(({ theme }) => ({
+  const StyledLink = styled(Link)(() => ({
     color: blueGrey[50],
     textDecoration: 'none',
     '&:hover': {
@@ -172,7 +172,6 @@ const MainLayout = () => {
       </Drawer>
       <Main open={isDrawerOpen}>
         <DrawerHeader />
-        {/* <AppLoading /> */}
         <Suspense fallback={<AppLoading />}>
           <Outlet />
           <AppSnackbar />

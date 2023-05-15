@@ -1,13 +1,31 @@
-import { Snackbar, SnackbarContent } from '@mui/material'
+import {
+  Snackbar,
+  SnackbarContent,
+  SnackbarContentProps,
+  styled,
+} from '@mui/material'
+import { Palette } from 'interface/Palette'
 import { Snackbar as SnackbarType } from 'interface/Snackbar'
 import React from 'react'
-import { useRecoilState, useResetRecoilState } from 'recoil'
+import { useRecoilValue, useResetRecoilState } from 'recoil'
 import { snackbar } from 'store/snackbar'
-import styled from 'styled-components'
+
+interface MuiSnackbarContentProps extends SnackbarContentProps {
+  type: Palette
+}
 
 const AppSnackbar = () => {
-  const [snackbarState] = useRecoilState<SnackbarType>(snackbar)
+  const snackbarState = useRecoilValue<SnackbarType>(snackbar)
   const resetSnackbar = useResetRecoilState(snackbar)
+
+  const StyledSnackbarContent = styled(
+    SnackbarContent
+  )<MuiSnackbarContentProps>(({ theme, type }) => ({
+    backgroundColor: theme.palette[type].main,
+    /* eslint-disable-next-line */
+  })) as any
+  // NOTE TSエラー https://github.com/mui/material-ui/issues/30569
+  // })) as typeof SnackbarContent
 
   return (
     <>
@@ -21,16 +39,12 @@ const AppSnackbar = () => {
         }}
       >
         <StyledSnackbarContent
-          background={`${snackbarState.type}`}
+          type={snackbarState.type}
           message={<span>{snackbarState.message}</span>}
         />
       </Snackbar>
     </>
   )
 }
-
-const StyledSnackbarContent = styled(SnackbarContent)<{ background: string }>`
-  ${(props) => `background: ${props.background}`};
-`
 
 export default AppSnackbar

@@ -9,17 +9,18 @@ import {
 import { blueGrey } from '@mui/material/colors'
 import { signOut } from 'firebase/auth'
 import React, { memo, useState } from 'react'
-import { useRecoilState, useResetRecoilState } from 'recoil'
+import { useRecoilValue, useResetRecoilState } from 'recoil'
 import { signInUserState } from 'store/auth'
-import { auth } from 'utils/firebase'
+import { auth } from 'lib/firebase'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import { User } from 'interface/User'
 // NOTE 発火するボタンごと子にする必要がある
 // https://stackoverflow.com/questions/70464786/mui-anchorel-prop-provided-is-invalid
 
 const UserMenu = memo(() => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
-  const [{ displayName, avatarImageUrl }] = useRecoilState(signInUserState)
+  const { displayName, avatarImageUrl } = useRecoilValue<User>(signInUserState)
   const resetAuth = useResetRecoilState(signInUserState)
   const userMenus = [
     // TODO ユーザー情報編集作成

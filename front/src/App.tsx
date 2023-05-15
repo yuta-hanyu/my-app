@@ -5,17 +5,19 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { Typography } from '@mui/material'
 import { BrowserRouter } from 'react-router-dom'
 import { AppRouter } from './router/AppRouter'
-import { ThemeProvider as StyledThemeProvider } from 'styled-components'
+import { AxiosClientProvider } from 'hooks/AxiosClientProvider'
 function App() {
   return (
     <MaterialThemeProvider theme={theme}>
-      <StyledThemeProvider theme={theme}>
-        <BrowserRouter>
-          <AppRouter />
-          <CssBaseline />
-          <Typography />
-        </BrowserRouter>
-      </StyledThemeProvider>
+      <BrowserRouter>
+        <AxiosClientProvider>
+          <>
+            <AppRouter />
+            <CssBaseline />
+            <Typography />
+          </>
+        </AxiosClientProvider>
+      </BrowserRouter>
     </MaterialThemeProvider>
   )
 }

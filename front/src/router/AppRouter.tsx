@@ -1,16 +1,15 @@
 import React, { useLayoutEffect, useState } from 'react'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { PublicRouter } from './PublicRouter'
 import { useRoutes } from 'react-router-dom'
 import { ProtectedRouter } from './ProtectedRouter'
 import { onAuthStateChanged } from 'firebase/auth'
 import AppLoading from '../components/AppLoading'
 import { signInUserState } from 'store/auth'
-import { auth } from 'utils/firebase'
+import { auth } from 'lib/firebase'
 
 export const AppRouter = () => {
-  const [authState] = useRecoilState(signInUserState)
-  const setAuth = useSetRecoilState(signInUserState)
+  const [authState, setAuth] = useRecoilState(signInUserState)
   const [isAuthCheck, setIsAuthCheck] = useState<boolean>(false)
 
   const commonRoutes = [{ path: '*', element: <AppLoading /> }]
