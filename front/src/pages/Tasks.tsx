@@ -22,11 +22,11 @@ const Tasks = memo(() => {
 
   const columnDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     // e.currentTarget.style.backgroundColor = 'blue'
-    console.log('columnDragEnter', e)
+    // console.log('columnDragEnter', e)
   }
 
   const columnDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    console.log('columnDragLeave', e)
+    // console.log('columnDragLeave', e)
     // e.currentTarget.style.backgroundColor = 'blue'
   }
 
@@ -35,24 +35,19 @@ const Tasks = memo(() => {
     setDragColumnIndex(null)
     setDragTaskIndex(null)
     setShouldStopColumnDrag(false)
-    console.log('columnDragEnd', e)
+    // console.log('columnDragEnd', e)
     // e.currentTarget.style.backgroundColor = 'black'
   }
 
   const columnDrop = (enteredColumnIndex: number) => {
     // タスクがカラムにドロップされた場合
     if (startDragTaskIndex !== null) {
-      if (!startDragColumnIndex || !startDragTaskIndex) {
-        setTaskList(taskList)
-        return
-      }
       const copiedTaskList = structuredClone(taskList)
+      if (startDragColumnIndex === null) return
       const copiedStartTasks = [...taskList[startDragColumnIndex].tasks]
       const [startTask] = copiedStartTasks.splice(startDragTaskIndex, 1)
-      if (!startTask) {
-        setTaskList(taskList)
-        return
-      }
+
+      if (startTask === null) return
 
       copiedTaskList[startDragColumnIndex].tasks = copiedStartTasks
       updateSort(copiedTaskList[startDragColumnIndex].tasks)
@@ -64,11 +59,11 @@ const Tasks = memo(() => {
       return
     }
 
-    if (enteredColumnIndex === startDragColumnIndex || shouldStopColumnDrag || !startDragColumnIndex) return
+    if (enteredColumnIndex === startDragColumnIndex || shouldStopColumnDrag) return
     const copiedTaskList = structuredClone(taskList)
+    if (startDragColumnIndex === null) return
     const [removedColumn] = copiedTaskList.splice(startDragColumnIndex, 1)
     copiedTaskList.splice(enteredColumnIndex, 0, removedColumn)
-
     updateSort(copiedTaskList)
     setTaskList(copiedTaskList)
   }
@@ -83,10 +78,7 @@ const Tasks = memo(() => {
     // 同一リスト内移動
     if (enteredColumnIndex === startDragColumnIndex) {
       const copiedStartTasks = [...taskList[startDragColumnIndex].tasks]
-      if (!startDragTaskIndex) {
-        setTaskList(taskList)
-        return
-      }
+      if (startDragTaskIndex === null) return
       const [startTask] = copiedStartTasks.splice(startDragTaskIndex, 1)
 
       copiedStartTasks.splice(enteredTaskIndex, 0, startTask)
@@ -101,19 +93,16 @@ const Tasks = memo(() => {
 
     const copiedTaskList = structuredClone(taskList)
 
-    if (!startDragColumnIndex || !startDragTaskIndex) {
-      setTaskList(taskList)
-      return
-    }
+    if (startDragColumnIndex === null) return
+
     const copiedStartTasks = [...copiedTaskList[startDragColumnIndex].tasks]
+
+    if (startDragTaskIndex === null) return
     const [startTask] = copiedStartTasks.splice(startDragTaskIndex, 1)
     copiedTaskList[startDragColumnIndex].tasks = copiedStartTasks
     updateSort(copiedTaskList[startDragColumnIndex].tasks)
 
-    if (!enteredColumnIndex) {
-      setTaskList(taskList)
-      return
-    }
+    if (enteredColumnIndex === null) return
     const copiedEndTasks = [...copiedTaskList[enteredColumnIndex].tasks]
     copiedEndTasks.splice(enteredTaskIndex, 0, startTask)
     copiedTaskList[enteredColumnIndex].tasks = copiedEndTasks
