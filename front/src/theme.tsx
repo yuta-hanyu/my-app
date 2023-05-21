@@ -14,19 +14,20 @@ const theme = createTheme({
     text: { primary: '#5e5454' },
   },
   typography: {
-    fontFamily: [
-      // 'Roboto',
-      // '"Noto Sans JP"',
-      // '"Helvetica"',
-      // 'Arial',
-      'monospace',
-      'cursive',
-      'fantasy',
-      'sans-serif',
-    ].join(','),
-    fontSize: 14,
+    fontFamily: ['monospace', 'cursive', 'fantasy', 'M PLUS Rounded 1c'].join(','),
+    fontSize: 12,
     button: {
       textTransform: 'none',
+    },
+  },
+  components: {
+    // NOTE https://github.com/mui/material-ui/issues/25759
+    MuiCssBaseline: {
+      styleOverrides: {
+        '.MuiBox-root': {
+          marginBottom: '0px !important',
+        },
+      },
     },
   },
 })

@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 import axios, { InternalAxiosRequestConfig } from 'axios'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { signInUserState } from 'store/auth'
 import { User } from 'interface/User'
+import { snackbar } from 'store/snackbar'
+import { Snackbar } from 'interface/Snackbar'
 
 const BaseUrl = process.env.REACT_APP_API_URL as string
 
@@ -21,6 +23,7 @@ export const axiosClient = axios.create({
 // NOTE https://zenn.dev/longbridge/articles/761d980297a62c
 export const AxiosClientProvider = ({ children }: Props) => {
   const { idToken } = useRecoilValue<User>(signInUserState)
+  const setSnackbar = useSetRecoilState(snackbar)
 
   useEffect(() => {
     // リクエスト インターセプター
@@ -39,6 +42,19 @@ export const AxiosClientProvider = ({ children }: Props) => {
         return response
       },
       (error) => {
+        setSnackbar((state: Snackbar) => ({
+          ...state,
+          open: true,
+          message: 'エラーが発生しました',
+          type: 'error',
+        }))
+        // switch (error.response?.status) {
+        //   case 401:
+        //     // なにかする
+        //     break
+        //   default:
+        //     break
+        // }
         return Promise.reject(error)
       }
     )

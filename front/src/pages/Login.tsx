@@ -22,7 +22,7 @@ import { User } from 'interface/User'
 import { snackbar } from 'store/snackbar'
 import { Snackbar } from 'interface/Snackbar'
 import constant from 'const'
-import { blueGrey } from '@mui/material/colors'
+import { blueGrey, grey } from '@mui/material/colors'
 import AppSnackbar from 'components/AppSnackbar'
 
 interface MuiTypographyProps extends TypographyProps {
@@ -91,7 +91,13 @@ const Login = memo(() => {
       direction="column"
       sx={{ height: '100vh' }}
     >
-      <Card sx={{ width: '357px', height: '300px' }}>
+      <Card
+        sx={{
+          width: '355px',
+          height: '300px',
+          boxShadow: `0 0 30px ${grey[900]}`,
+        }}
+      >
         <Box
           component={'div'}
           sx={{
