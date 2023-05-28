@@ -6,14 +6,18 @@ import { Task, TaskList } from 'interface/Task'
 import React, { memo, useEffect, useState } from 'react'
 
 const Tasks = memo(() => {
-  const [taskList, setTaskList] = useState<TaskList[]>([])
+  const [taskColumns, setTaskList] = useState<TaskList[]>([])
   const [startDragColumnIndex, setDragColumnIndex] = useState<number | null>(null)
   const [startDragTaskIndex, setDragTaskIndex] = useState<number | null>(null)
   const [shouldStopColumnDrag, setShouldStopColumnDrag] = useState<boolean>(false)
 
   useEffect(() => {
-    axiosClient.get(`tasks`).then((res: AxiosResponse) => setTaskList(res.data.body))
+    axiosClient.get(`/tasks`).then((res: AxiosResponse) => {
+      console.log(333, res)
+      setTaskList(res.data)
+    })
   }, [])
+  console.log(taskColumns)
 
   const columnDragStart = (columnIndex: number) => {
     if (startDragTaskIndex) return
@@ -42,9 +46,9 @@ const Tasks = memo(() => {
   const columnDrop = (enteredColumnIndex: number) => {
     // タスクがカラムにドロップされた場合
     if (startDragTaskIndex !== null) {
-      const copiedTaskList = structuredClone(taskList)
+      const copiedTaskList = structuredClone(taskColumns)
       if (startDragColumnIndex === null) return
-      const copiedStartTasks = [...taskList[startDragColumnIndex].tasks]
+      const copiedStartTasks = [...taskColumns[startDragColumnIndex].tasks]
       const [startTask] = copiedStartTasks.splice(startDragTaskIndex, 1)
 
       if (startTask === null) return
@@ -60,7 +64,7 @@ const Tasks = memo(() => {
     }
 
     if (enteredColumnIndex === startDragColumnIndex || shouldStopColumnDrag) return
-    const copiedTaskList = structuredClone(taskList)
+    const copiedTaskList = structuredClone(taskColumns)
     if (startDragColumnIndex === null) return
     const [removedColumn] = copiedTaskList.splice(startDragColumnIndex, 1)
     copiedTaskList.splice(enteredColumnIndex, 0, removedColumn)
@@ -77,13 +81,13 @@ const Tasks = memo(() => {
   const taskDrop = (enteredTaskIndex: number, enteredColumnIndex: number) => {
     // 同一リスト内移動
     if (enteredColumnIndex === startDragColumnIndex) {
-      const copiedStartTasks = [...taskList[startDragColumnIndex].tasks]
+      const copiedStartTasks = [...taskColumns[startDragColumnIndex].tasks]
       if (startDragTaskIndex === null) return
       const [startTask] = copiedStartTasks.splice(startDragTaskIndex, 1)
 
       copiedStartTasks.splice(enteredTaskIndex, 0, startTask)
 
-      const copiedTaskList = structuredClone(taskList)
+      const copiedTaskList = structuredClone(taskColumns)
       copiedTaskList[enteredColumnIndex].tasks = copiedStartTasks
 
       updateSort(copiedTaskList[enteredColumnIndex].tasks)
@@ -91,7 +95,7 @@ const Tasks = memo(() => {
       return
     }
 
-    const copiedTaskList = structuredClone(taskList)
+    const copiedTaskList = structuredClone(taskColumns)
 
     if (startDragColumnIndex === null) return
 
@@ -120,7 +124,7 @@ const Tasks = memo(() => {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-      {taskList.map((column: TaskList, columnIndex: number) => {
+      {taskColumns.map((column: TaskList, columnIndex: number) => {
         return (
           <Box
             component={'div'}
@@ -147,11 +151,11 @@ const Tasks = memo(() => {
             onDragEnd={(e) => columnDragEnd(e)}
           >
             <Typography variant="h6" noWrap component="div" align="center">
-              {column.columnId}
+              {column.taskColumnId}
               {column.title}
             </Typography>
             <Divider sx={{ background: blueGrey[50] }} />
-            {column.tasks.map((task: Task, taskIndex: number) => {
+            {/* {column.tasks.map((task: Task, taskIndex: number) => {
               return (
                 task && (
                   <Box component={'div'} key={taskIndex} py={2} mb={2}>
@@ -161,8 +165,8 @@ const Tasks = memo(() => {
                         background: grey[800],
                         color: blueGrey[50],
                         cursor: 'pointer',
-                        opacity: column.columnId === startDragTaskIndex ? '0.5' : '',
-                        // backgroundColor: column.columnId === startDragTaskIndex ? 'green' : '',
+                        opacity: column.taskColumnId === startDragTaskIndex ? '0.5' : '',
+                        // backgroundColor: column.taskColumnId === startDragTaskIndex ? 'green' : '',
                       }}
                       onDragStart={() => {
                         taskDragStart(taskIndex)
@@ -180,7 +184,7 @@ const Tasks = memo(() => {
                   </Box>
                 )
               )
-            })}
+            })} */}
           </Box>
         )
       })}

@@ -1,5 +1,6 @@
 export interface TaskList {
-  columnId: number
+  taskColumnId: number
+  userId: number
   sort: number
   title: string
   tasks: Task[]

@@ -18,3 +18,6 @@ test:
 test-local:
 	cd src/app &&\
 	npm run test:local
+
+in:
+	docker compose exec front bash

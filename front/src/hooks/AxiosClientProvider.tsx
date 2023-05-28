@@ -5,6 +5,7 @@ import { signInUserState } from 'store/auth'
 import { User } from 'interface/User'
 import { snackbar } from 'store/snackbar'
 import { Snackbar } from 'interface/Snackbar'
+import humps from 'humps'
 
 const BaseUrl = process.env.REACT_APP_API_URL as string
 
@@ -27,14 +28,14 @@ export const AxiosClientProvider = ({ children }: Props) => {
 
   useEffect(() => {
     // リクエスト インターセプター
-    const requestInterceptors = axiosClient.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        if (config.headers !== undefined) {
-          config.headers.Authorization = `Bearer ${idToken}`
-        }
-        return config
+    const requestInterceptors = axiosClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+      if (config.headers !== undefined) {
+        config.headers.Authorization = `Bearer ${idToken}`
       }
-    )
+      config.params = humps.decamelizeKeys(config.params)
+      config.data = humps.decamelizeKeys(config.data)
+      return config
+    })
 
     // レスポンス インターセプター
     const responseInterceptor = axiosClient.interceptors.response.use(
