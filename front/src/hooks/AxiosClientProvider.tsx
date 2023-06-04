@@ -32,6 +32,7 @@ export const AxiosClientProvider = ({ children }: Props) => {
       if (config.headers !== undefined) {
         config.headers.Authorization = `Bearer ${idToken}`
       }
+
       config.params = humps.decamelizeKeys(config.params)
       config.data = humps.decamelizeKeys(config.data)
       return config
@@ -40,6 +41,7 @@ export const AxiosClientProvider = ({ children }: Props) => {
     // レスポンス インターセプター
     const responseInterceptor = axiosClient.interceptors.response.use(
       (response) => {
+        response.data = humps.camelizeKeys(response.data)
         return response
       },
       (error) => {

@@ -3,11 +3,12 @@ export interface TaskList {
   userId: number
   sort: number
   title: string
-  tasks: Task[]
+  tasks?: Task[]
 }
 
 export interface Task {
   taskId: number
+  userId: number
   sort: number
   title: string
 }
