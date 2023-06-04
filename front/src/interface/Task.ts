@@ -8,6 +8,7 @@ export interface TaskList {
 
 export interface Task {
   taskId: number
+  taskColumnId: number
   userId: number
   sort: number
   title: string

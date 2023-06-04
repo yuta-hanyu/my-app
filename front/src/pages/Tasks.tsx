@@ -7,6 +7,7 @@ import React, { memo, useEffect, useState } from 'react'
 
 const Tasks = memo(() => {
   const [taskColumns, setTaskList] = useState<TaskList[]>([])
+  const [preTaskColumns, setPreTaskList] = useState<TaskList[]>([])
   const [startDragColumnIndex, setDragColumnIndex] = useState<number | null>(null)
   const [startDragTaskIndex, setDragTaskIndex] = useState<number | null>(null)
   const [enteredColumnIndex, setEnteredColumnIndex] = useState<number | null>(null)
@@ -20,32 +21,23 @@ const Tasks = memo(() => {
   console.log(taskColumns)
 
   const updateTaskColumns = () => {
-    axiosClient.put(`/task-column/sort`, { columns: taskColumns }).then((res: AxiosResponse) => {
-      console.log('updateTaskColumns', res)
-      setTaskList(res.data)
-    })
+    axiosClient.put(`/task-column/sort`, { columns: taskColumns }).catch((err: Error) => setTaskList(preTaskColumns))
   }
 
   const updateTasks = () => {
-    console.warn(startDragTaskIndex, startDragColumnIndex)
     if (startDragColumnIndex === null) return
     const startTasks: Task[] = taskColumns[startDragColumnIndex].tasks!
-
     const param = {
       tasks: startTasks,
     }
-
     if (startDragColumnIndex !== enteredColumnIndex) {
       param.tasks = [...param.tasks, ...taskColumns[enteredColumnIndex!].tasks!]
     }
-
-    axiosClient.put(`/tasks`, param).then((res: AxiosResponse) => {
-      console.log('updateTasks', res)
-      // setTaskList(res.data)
-    })
+    axiosClient.put(`/tasks`, param).catch((err: Error) => setTaskList(preTaskColumns))
   }
 
   const columnDragStart = (columnIndex: number) => {
+    setPreTaskList(taskColumns)
     if (startDragTaskIndex) return
     setDragColumnIndex(columnIndex)
   }
@@ -116,6 +108,7 @@ const Tasks = memo(() => {
   }
 
   const taskDragStart = (taskIndex: number) => {
+    setPreTaskList(taskColumns)
     if (startDragColumnIndex) return
     setShouldStopColumnDrag(true)
     setDragTaskIndex(taskIndex)
